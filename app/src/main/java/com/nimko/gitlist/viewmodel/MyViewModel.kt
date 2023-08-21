@@ -27,11 +27,12 @@ class MyViewModel (val database:Db) : ViewModel() {
 
     var isApiUpdated = false
     fun saveDb(){
+        isApiUpdated = true
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                api.getClients(10,1).forEach {
+                api.getClients(5,1).forEach {
                     try {
-                        api.getClientRepos(it.login, 5, 1).forEach {
+                        api.getClientRepos(it.login, 3, 1).forEach {
                             try {
                                 dao.saveClientRepo(it)
                                 Log.d("Db", "Repo $it - save!")
@@ -48,7 +49,6 @@ class MyViewModel (val database:Db) : ViewModel() {
             }catch (he: HttpException){
                 Log.d("ApiError", he.toString())
             }
-            isApiUpdated = true
         }
     }
 
@@ -58,8 +58,8 @@ class MyViewModel (val database:Db) : ViewModel() {
         }
         if (!isApiUpdated) {
             Log.d("SAVE", "me")
-            //saveDb()
-        } else isApiUpdated = false
+            saveDb()
+        }
 
     }
 
@@ -80,5 +80,7 @@ class MyViewModel (val database:Db) : ViewModel() {
             }
         }
     }
+
+
 
 }

@@ -32,11 +32,14 @@ import com.nimko.gitlist.dbservices.entitys.ClientRepo
 import com.nimko.gitlist.ui.theme.Pink80
 import com.nimko.gitlist.ui.theme.Purple80
 import com.nimko.gitlist.viewmodel.MyViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ListClient (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOwner){
+fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel, owner: LifecycleOwner){
     val mutableStateListUser = remember {
         mutableStateListOf<Client>()
     }
@@ -45,10 +48,7 @@ fun ListClient (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOwner){
             mutableStateListUser.addAll(it)
         Log.d("MyList of Client", it.toString())
     })
-    model.clientRepos.observe(owner, {
-        Log.d("MyList of Repo ", it.toString())
-    })
-    model.updateClients()
+
     Column(modifier = Modifier.fillMaxSize())
     {
         Text(
@@ -61,14 +61,14 @@ fun ListClient (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOwner){
             modifier = Modifier.fillMaxSize()
         ) {
             itemsIndexed(mutableStateListUser) { i, item ->
-                ClientListItems(onClick, item, model)
+                ClientListItems(onClick, item)
             }
         }
     }
 }
 
 @Composable
-fun ClientListItems(onClick: () -> Unit, item: Client, model: MyViewModel) {
+fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,10 +85,7 @@ fun ClientListItems(onClick: () -> Unit, item: Client, model: MyViewModel) {
                 .padding(10.dp)
                 .clickable {
                     Log.d("My Log", "Click ${item.id} ${item.login}")
-
-                  //  model.isRepo.postValue(true)
-                    model.updateClientRepos(item.login)
-                    onClick()
+                    onClick(item.login)
                 }
         )
     }
@@ -106,7 +103,6 @@ fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOw
         mutableStateListRepo.addAll(it)
         Log.d("MyList of Repo ", it.toString())
     })
-    model.updateClients()
     Column(modifier = Modifier.fillMaxSize())
     {
         Row(modifier = Modifier.fillMaxWidth())
@@ -114,7 +110,6 @@ fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOw
                 IconButton(
                     onClick = {
                         onClick()
-                        //model.isRepo.postValue(false)
                     }
                 ) {
                     Icon(
@@ -130,7 +125,7 @@ fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOw
                     fontSize = 25.sp,
                 )
                 Text(
-                    text = "${mutableStateListRepo.get(0).clientLogin}:",
+                    text = "${model.clientRepos.value!!.get(0).clientLogin}:",
                     color = Color.Red,
                     fontSize = 25.sp,
                 )
@@ -139,7 +134,7 @@ fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOw
             modifier = Modifier.fillMaxSize()
         ) {
             itemsIndexed(mutableStateListRepo) { i, item ->
-                ClientRepoListItems(item, model)
+                ClientRepoListItems(item)
             }
         }
     }
@@ -147,7 +142,7 @@ fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOw
 
 
 @Composable
-fun ClientRepoListItems(item: ClientRepo, model: MyViewModel) {
+fun ClientRepoListItems(item: ClientRepo) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

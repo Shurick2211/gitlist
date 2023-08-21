@@ -2,6 +2,7 @@ package com.nimko.gitlist
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -23,42 +24,33 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
+        model.updateClients()
 
         setContent {
             GitlistTheme {
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 )
                 {
-//                   var isR = mutableStateOf(false)
-//                    model.isRepo.observe(this,{
-//                        runOnUiThread {
-//                           isR.value = it
-//                        }
-//                    })
-//                    if(isR.value)
-//                        ListClientRepos(model = model, owner = this)
-//                    else
-//                        ListClient(model = model, owner = this )
 
                     val navController = rememberNavController()
 
                     NavHost(navController = navController, startDestination = LIST_USER ){
                         composable(LIST_USER){
                             ListClient(onClick = {
+                                model.updateClientRepos(it)
+                                Log.d("SCREEN", LIST_USER)
                                 navController.navigate(LIST_USER_REPO)
                             }, model = model, owner = this@MainActivity)
 
                         }
                         composable(LIST_USER_REPO){
                             ListClientRepos(onClick = {
+                                Log.d("SCREEN", LIST_USER_REPO)
                                 navController.navigate(LIST_USER)
                             }, model = model, owner = this@MainActivity)
-
                         }
                     }
                 }
