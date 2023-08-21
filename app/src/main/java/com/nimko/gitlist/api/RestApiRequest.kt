@@ -5,11 +5,13 @@ import com.nimko.gitlist.api.dto.Person
 import com.nimko.gitlist.api.dto.Repo
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RestApiRequest {
     @GET("users")
-    suspend fun getPersons(): List<Person>
+    suspend fun getPersons(@Query("per_page") pp:Int, @Query("page") p:Int): List<Person>
 
     @GET("users/{login}/repos")
-    suspend fun getRepoByPersonLogin(@Path("login") login:String): List<Repo>
+    suspend fun getRepoByPersonLogin(@Path("login") login:String,
+     @Query("per_page") pp:Int, @Query("page") p:Int): List<Repo>
 }

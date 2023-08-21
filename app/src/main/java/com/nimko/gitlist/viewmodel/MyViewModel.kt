@@ -20,17 +20,18 @@ import retrofit2.HttpException
 class MyViewModel (val database:Db) : ViewModel() {
     var clients: MutableLiveData<MutableList<Client>> = MutableLiveData()
     var clientRepos: MutableLiveData<MutableList<ClientRepo>> = MutableLiveData()
-    var isRepo:MutableLiveData<Boolean> = MutableLiveData(false)
+    //var isRepo:MutableLiveData<Boolean> = MutableLiveData(false)
 
     val api = ApiService()
     val dao = database.getClintDao()
 
+    var isApiUpdated = false
     fun saveDb(){
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                api.getClients().forEach {
+                api.getClients(10,1).forEach {
                     try {
-                        api.getClientRepos(it.login).forEach {
+                        api.getClientRepos(it.login, 5, 1).forEach {
                             try {
                                 dao.saveClientRepo(it)
                                 Log.d("Db", "Repo $it - save!")
@@ -43,17 +44,23 @@ class MyViewModel (val database:Db) : ViewModel() {
                         Log.d("DbError", "Client $it - existed!")
                     }
                 }
+                updateClients()
             }catch (he: HttpException){
                 Log.d("ApiError", he.toString())
             }
+            isApiUpdated = true
         }
     }
 
     fun updateClients(){
-        //saveDb()
         GlobalScope.launch(Dispatchers.IO) {
             clients.postValue(dao.getAllClient().toMutableList())
         }
+        if (!isApiUpdated) {
+            Log.d("SAVE", "me")
+            //saveDb()
+        } else isApiUpdated = false
+
     }
 
     fun updateClientRepos(login:String){

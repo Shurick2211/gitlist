@@ -36,13 +36,13 @@ import com.nimko.gitlist.viewmodel.MyViewModel
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ListClient (model: MyViewModel, owner: LifecycleOwner){
-    val mutableStateList = remember {
+fun ListClient (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOwner){
+    val mutableStateListUser = remember {
         mutableStateListOf<Client>()
     }
     model.clients.observe(owner,{
-            mutableStateList.clear()
-            mutableStateList.addAll(it)
+            mutableStateListUser.clear()
+            mutableStateListUser.addAll(it)
         Log.d("MyList of Client", it.toString())
     })
     model.clientRepos.observe(owner, {
@@ -60,15 +60,15 @@ fun ListClient (model: MyViewModel, owner: LifecycleOwner){
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(mutableStateList) { i, item ->
-                ClientListItems(item, model)
+            itemsIndexed(mutableStateListUser) { i, item ->
+                ClientListItems(onClick, item, model)
             }
         }
     }
 }
 
 @Composable
-fun ClientListItems(item: Client, model: MyViewModel) {
+fun ClientListItems(onClick: () -> Unit, item: Client, model: MyViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,8 +85,10 @@ fun ClientListItems(item: Client, model: MyViewModel) {
                 .padding(10.dp)
                 .clickable {
                     Log.d("My Log", "Click ${item.id} ${item.login}")
-                    model.isRepo.postValue(true)
+
+                  //  model.isRepo.postValue(true)
                     model.updateClientRepos(item.login)
+                    onClick()
                 }
         )
     }
@@ -95,13 +97,13 @@ fun ClientListItems(item: Client, model: MyViewModel) {
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ListClientRepos (model: MyViewModel, owner: LifecycleOwner){
-    val mutableStateList = remember {
+fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOwner){
+    val mutableStateListRepo = remember {
         mutableStateListOf<ClientRepo>()
     }
     model.clientRepos.observe(owner, {
-        mutableStateList.clear()
-        mutableStateList.addAll(it)
+        mutableStateListRepo.clear()
+        mutableStateListRepo.addAll(it)
         Log.d("MyList of Repo ", it.toString())
     })
     model.updateClients()
@@ -110,7 +112,10 @@ fun ListClientRepos (model: MyViewModel, owner: LifecycleOwner){
         Row(modifier = Modifier.fillMaxWidth())
             {
                 IconButton(
-                    onClick = {  model.isRepo.postValue(false) }
+                    onClick = {
+                        onClick()
+                        //model.isRepo.postValue(false)
+                    }
                 ) {
                     Icon(
                         Icons.Filled.KeyboardArrowLeft,
@@ -125,7 +130,7 @@ fun ListClientRepos (model: MyViewModel, owner: LifecycleOwner){
                     fontSize = 25.sp,
                 )
                 Text(
-                    text = "${mutableStateList.get(0).clientLogin}:",
+                    text = "${mutableStateListRepo.get(0).clientLogin}:",
                     color = Color.Red,
                     fontSize = 25.sp,
                 )
@@ -133,7 +138,7 @@ fun ListClientRepos (model: MyViewModel, owner: LifecycleOwner){
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(mutableStateList) { i, item ->
+            itemsIndexed(mutableStateListRepo) { i, item ->
                 ClientRepoListItems(item, model)
             }
         }
