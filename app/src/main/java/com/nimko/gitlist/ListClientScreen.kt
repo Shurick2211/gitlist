@@ -20,22 +20,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LifecycleOwner
 import com.nimko.gitlist.dbservices.entitys.Client
 import com.nimko.gitlist.dbservices.entitys.ClientRepo
 import com.nimko.gitlist.ui.theme.Pink80
-import com.nimko.gitlist.ui.theme.Purple80
-import com.nimko.gitlist.viewmodel.MyViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnrememberedMutableState")

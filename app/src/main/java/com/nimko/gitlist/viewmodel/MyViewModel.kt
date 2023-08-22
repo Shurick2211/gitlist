@@ -20,7 +20,7 @@ import retrofit2.HttpException
 class MyViewModel (val database:Db) : ViewModel() {
     var clients: MutableLiveData<MutableList<Client>> = MutableLiveData()
     var clientRepos: MutableLiveData<MutableList<ClientRepo>> = MutableLiveData()
-    //var isRepo:MutableLiveData<Boolean> = MutableLiveData(false)
+
 
     val api = ApiService()
     val dao = database.getClintDao()
