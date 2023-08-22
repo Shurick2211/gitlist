@@ -24,13 +24,13 @@ class MyViewModel (val database:Db) : ViewModel() {
 
     fun updateClients(){
         GlobalScope.launch(Dispatchers.IO) {
-            clients.postValue(storage.getClient(5,0))
+            clients.postValue(storage.getClient(5,1))
         }
     }
 
     fun updateClientRepos(login:String){
         GlobalScope.launch(Dispatchers.IO) {
-            clientRepos.postValue(storage.getClientRepo(login,3,0))
+            clientRepos.postValue(storage.getClientRepo(login,3,1))
         }
     }
 

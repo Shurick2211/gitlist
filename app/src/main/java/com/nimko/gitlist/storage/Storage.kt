@@ -14,20 +14,31 @@ class Storage (
 ){
 
     suspend fun getClient(perPage:Int, page:Int):MutableList<Client>{
-        saveDbClientFromApi(perPage, page)
-        return dao.getAllClient(perPage, page*perPage).toMutableList()
+        val list = dao.getAllClient(perPage, page*perPage)
+        if (list.size < perPage) {
+            Log.d("Storage", "NEED Client DATA!")
+            saveDbClientFromApi(perPage, page)
+            return dao.getAllClient(perPage, page*perPage).toMutableList()
+        }
+        return list.toMutableList()
     }
 
     suspend fun getClientRepo(login: String, perPage:Int, page:Int):MutableList<ClientRepo>{
-        saveDbClientRepoFromApi(login, perPage, page)
-        return dao.getAllClientRepos(login, perPage, page*perPage).toMutableList()
+        val list = dao.getAllClientRepos(login, perPage, page*perPage)
+        if (list.size < perPage) {
+            Log.d("Storage", "NEED Repo DATA!")
+            saveDbClientRepoFromApi(login, perPage, page)
+            return dao.getAllClientRepos(login, perPage, page*perPage).toMutableList()
+        }
+        return list.toMutableList()
     }
 
     private suspend fun saveDbClientFromApi(perPage:Int, page:Int){
         try {
-            api.getClients(perPage,page).forEach {
+            api.getClients(perPage,page+1).forEach {
                 try{
                     dao.saveClient(it)
+                    Log.d("Db", "Client $it - save!")
                 } catch (e: SQLiteConstraintException) {
                     Log.d("DbError", "Client $it - existed!")
                 }
@@ -39,7 +50,7 @@ class Storage (
 
     private suspend fun saveDbClientRepoFromApi(login: String, perPage:Int, page:Int){
         try {
-            api.getClientRepos(login, perPage, page).forEach {
+            api.getClientRepos(login, perPage, page+1).forEach {
                 try {
                     dao.saveClientRepo(it)
                     Log.d("Db", "Repo $it - save!")

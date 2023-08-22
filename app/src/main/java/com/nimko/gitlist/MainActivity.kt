@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         composable(LIST_USER){
                             ListClient(onClick = {
                                 model.updateClientRepos(it)
-                                Log.d("SCREEN", LIST_USER)
+                                Log.d("SCREEN", "$LIST_USER for $it")
                                 navController.navigate(LIST_USER_REPO)
                             }, mutableStateListUser)
 
