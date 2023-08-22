@@ -20,20 +20,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.nimko.gitlist.dbservices.entitys.Client
 import com.nimko.gitlist.dbservices.entitys.ClientRepo
 import com.nimko.gitlist.ui.theme.Pink80
+import com.nimko.gitlist.viewmodel.MyViewModel
 
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ListClient (onClick: (param:String) -> Unit, mutableStateListUser:SnapshotStateList<Client>){
+fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
 
+    var mutableStateListUser
+    = model.getClientPager(PAGE_SIZE_CLIENT).collectAsLazyPagingItems()
 
     Column(modifier = Modifier.fillMaxSize())
     {
@@ -46,7 +49,7 @@ fun ListClient (onClick: (param:String) -> Unit, mutableStateListUser:SnapshotSt
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(mutableStateListUser) { i, item ->
+            items(mutableStateListUser) {  item ->
                 ClientListItems(onClick, item)
             }
         }
@@ -80,10 +83,10 @@ fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ListClientRepos (onClick: () -> Unit, mutableStateListRepo:SnapshotStateList<ClientRepo>){
-    val login =
-        if (mutableStateListRepo.isNullOrEmpty()) "Wait"
-        else mutableStateListRepo.get(0).clientLogin
+fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, login:String){
+    var mutableStateListRepo =
+        model.getClientRepoPager(login, PAGE_SIZE_CLIENT_REPO).collectAsLazyPagingItems()
+
     Column(modifier = Modifier.fillMaxSize())
     {
         Row(modifier = Modifier.fillMaxWidth())
@@ -114,8 +117,65 @@ fun ListClientRepos (onClick: () -> Unit, mutableStateListRepo:SnapshotStateList
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(mutableStateListRepo) { i, item ->
+            items(mutableStateListRepo) { item ->
                 ClientRepoListItems(item)
+            }
+            mutableStateListRepo.apply {
+                when {
+                    loadState.refresh is LoadState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp)
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .padding(12.dp)
+                                        .align(
+                                            Alignment.Center
+                                        )
+                                )
+                            }
+                        }
+                    }
+
+                    loadState.append is LoadState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .padding(12.dp)
+                                        .align(
+                                            Alignment.Center
+                                        )
+                                )
+                            }
+                        }
+                    }
+
+                    loadState.prepend is LoadState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .padding(12.dp)
+                                        .align(
+                                            Alignment.Center
+                                        )
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -146,3 +206,5 @@ fun ClientRepoListItems(item: ClientRepo) {
 
 }
 
+const val PAGE_SIZE_CLIENT = 10
+const val PAGE_SIZE_CLIENT_REPO = 5

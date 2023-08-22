@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        model.updateClients()
+       // model.updateClients()
 
         setContent {
             GitlistTheme {
@@ -38,40 +38,43 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 )
                 {
-                    val mutableStateListRepo = remember {
-                        mutableStateListOf<ClientRepo>()
-                    }
-                    model.clientRepos.observe(this, {
-                        mutableStateListRepo.clear()
-                        mutableStateListRepo.addAll(it)
-                        Log.d("MyList of Repo ", it.toString())
-                    })
 
-                    val mutableStateListUser = remember {
-                        mutableStateListOf<Client>()
-                    }
-                    model.clients.observe(this,{
-                        mutableStateListUser.clear()
-                        mutableStateListUser.addAll(it)
-                        Log.d("MyList of Client", it.toString())
-                    })
+//                    = remember {
+//                        mutableStateListOf<ClientRepo>()
+//                    }
+//                    model.clientRepos.observe(this, {
+//                        mutableStateListRepo.clear()
+//                        mutableStateListRepo.addAll(it)
+//                        Log.d("MyList of Repo ", it.toString())
+//                    })
+
+//                    val mutableStateListUser
+////                    = remember {
+////                        mutableStateListOf<Client>()
+////                    }
+//                    model.clients.observe(this,{
+//                        mutableStateListUser.clear()
+//                        mutableStateListUser.addAll(it)
+//                        Log.d("MyList of Client", it.toString())
+//                    })
 
                     val navController = rememberNavController()
-
+                    var login = ""
                     NavHost(navController = navController, startDestination = LIST_USER ){
                         composable(LIST_USER){
                             ListClient(onClick = {
-                                model.updateClientRepos(it)
+                              //  model.updateClientRepos(it)
+                                login = it
                                 Log.d("SCREEN", "$LIST_USER for $it")
                                 navController.navigate(LIST_USER_REPO)
-                            }, mutableStateListUser)
+                            }, model)
 
                         }
                         composable(LIST_USER_REPO){
                             ListClientRepos(onClick = {
                                 Log.d("SCREEN", LIST_USER_REPO)
                                 navController.navigate(LIST_USER)
-                            }, mutableStateListRepo)
+                            },model, login)
                         }
                     }
                 }
@@ -80,8 +83,9 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object{
-         val LIST_USER = "listUser"
-         val LIST_USER_REPO = "listUserRepo"
+        const val LIST_USER = "listUser"
+        const val LIST_USER_REPO = "listUserRepo"
+
     }
 }
 
