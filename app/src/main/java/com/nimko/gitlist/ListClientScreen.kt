@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -39,15 +40,8 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel, owner: LifecycleOwner){
-    val mutableStateListUser = remember {
-        mutableStateListOf<Client>()
-    }
-    model.clients.observe(owner,{
-            mutableStateListUser.clear()
-            mutableStateListUser.addAll(it)
-        Log.d("MyList of Client", it.toString())
-    })
+fun ListClient (onClick: (param:String) -> Unit, mutableStateListUser:SnapshotStateList<Client>){
+
 
     Column(modifier = Modifier.fillMaxSize())
     {
@@ -94,15 +88,8 @@ fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOwner){
-    val mutableStateListRepo = remember {
-        mutableStateListOf<ClientRepo>()
-    }
-    model.clientRepos.observe(owner, {
-        mutableStateListRepo.clear()
-        mutableStateListRepo.addAll(it)
-        Log.d("MyList of Repo ", it.toString())
-    })
+fun ListClientRepos (onClick: () -> Unit, mutableStateListRepo:SnapshotStateList<ClientRepo>){
+
     Column(modifier = Modifier.fillMaxSize())
     {
         Row(modifier = Modifier.fillMaxWidth())
@@ -125,7 +112,7 @@ fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, owner: LifecycleOw
                     fontSize = 25.sp,
                 )
                 Text(
-                    text = "${model.clientRepos.value!!.get(0).clientLogin}:",
+                    text = "${mutableStateListRepo.get(0).clientLogin}:" ,
                     color = Color.Red,
                     fontSize = 25.sp,
                 )
