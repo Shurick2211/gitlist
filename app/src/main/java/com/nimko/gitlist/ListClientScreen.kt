@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -35,7 +34,7 @@ import com.nimko.gitlist.viewmodel.MyViewModel
 @Composable
 fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
 
-    var mutableStateListUser
+    val listUser
     = model.getClientPager(PAGE_SIZE_CLIENT).collectAsLazyPagingItems()
 
     Column(modifier = Modifier.fillMaxSize())
@@ -47,12 +46,12 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
             fontSize = 25.sp,
         )
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(mutableStateListUser) {  item ->
-                ClientListItems(onClick, item)
-            }
-        }
+                    modifier = Modifier.fillMaxSize()
+               ) {
+                    items(listUser.itemCount) {  item ->
+                       ClientListItems(onClick, listUser[item]!!)
+                    }
+               }
     }
 }
 
@@ -84,7 +83,7 @@ fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, login:String){
-    var mutableStateListRepo =
+    val listRepo =
         model.getClientRepoPager(login, PAGE_SIZE_CLIENT_REPO).collectAsLazyPagingItems()
 
     Column(modifier = Modifier.fillMaxSize())
@@ -117,65 +116,8 @@ fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, login:String){
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(mutableStateListRepo) { item ->
-                ClientRepoListItems(item)
-            }
-            mutableStateListRepo.apply {
-                when {
-                    loadState.refresh is LoadState.Loading -> {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(16.dp)
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .padding(12.dp)
-                                        .align(
-                                            Alignment.Center
-                                        )
-                                )
-                            }
-                        }
-                    }
-
-                    loadState.append is LoadState.Loading -> {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .padding(12.dp)
-                                        .align(
-                                            Alignment.Center
-                                        )
-                                )
-                            }
-                        }
-                    }
-
-                    loadState.prepend is LoadState.Loading -> {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .padding(12.dp)
-                                        .align(
-                                            Alignment.Center
-                                        )
-                                )
-                            }
-                        }
-                    }
-                }
+            items(listRepo.itemCount) { item ->
+                 ClientRepoListItems(listRepo[item]!!)
             }
         }
     }

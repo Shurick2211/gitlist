@@ -9,14 +9,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.nimko.gitlist.dbservices.entitys.Client
-import com.nimko.gitlist.dbservices.entitys.ClientRepo
 import com.nimko.gitlist.ui.theme.GitlistTheme
 import com.nimko.gitlist.viewmodel.MyViewModel
 
@@ -28,42 +24,19 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       // model.updateClients()
 
         setContent {
             GitlistTheme {
-
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 )
                 {
-
-//                    = remember {
-//                        mutableStateListOf<ClientRepo>()
-//                    }
-//                    model.clientRepos.observe(this, {
-//                        mutableStateListRepo.clear()
-//                        mutableStateListRepo.addAll(it)
-//                        Log.d("MyList of Repo ", it.toString())
-//                    })
-
-//                    val mutableStateListUser
-////                    = remember {
-////                        mutableStateListOf<Client>()
-////                    }
-//                    model.clients.observe(this,{
-//                        mutableStateListUser.clear()
-//                        mutableStateListUser.addAll(it)
-//                        Log.d("MyList of Client", it.toString())
-//                    })
-
                     val navController = rememberNavController()
                     var login = ""
                     NavHost(navController = navController, startDestination = LIST_USER ){
                         composable(LIST_USER){
                             ListClient(onClick = {
-                              //  model.updateClientRepos(it)
                                 login = it
                                 Log.d("SCREEN", "$LIST_USER for $it")
                                 navController.navigate(LIST_USER_REPO)

@@ -1,6 +1,5 @@
 package com.nimko.gitlist.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -12,21 +11,12 @@ import androidx.paging.cachedIn
 import com.nimko.gitlist.api.ApiService
 import com.nimko.gitlist.dbservices.App
 import com.nimko.gitlist.dbservices.dao.Db
-import com.nimko.gitlist.dbservices.entitys.Client
-import com.nimko.gitlist.dbservices.entitys.ClientRepo
 import com.nimko.gitlist.storage.ClientPagingSource
 import com.nimko.gitlist.storage.ClientRepoPagingSource
 import com.nimko.gitlist.storage.Storage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 
 class MyViewModel (val database:Db) : ViewModel() {
-    var clients: MutableLiveData<MutableList<Client>> = MutableLiveData()
-    var clientRepos: MutableLiveData<MutableList<ClientRepo>> = MutableLiveData()
-
-    val storage = Storage(database.getClintDao(), ApiService())
+    private val storage = Storage(database.getClintDao(), ApiService())
 
     fun getClientPager(perPage:Int) = Pager(
         config = PagingConfig(perPage, enablePlaceholders = false),
