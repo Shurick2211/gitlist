@@ -81,7 +81,9 @@ fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ListClientRepos (onClick: () -> Unit, mutableStateListRepo:SnapshotStateList<ClientRepo>){
-
+    val login =
+        if (mutableStateListRepo.isNullOrEmpty()) "Wait"
+        else mutableStateListRepo.get(0).clientLogin
     Column(modifier = Modifier.fillMaxSize())
     {
         Row(modifier = Modifier.fillMaxWidth())
@@ -104,7 +106,7 @@ fun ListClientRepos (onClick: () -> Unit, mutableStateListRepo:SnapshotStateList
                     fontSize = 25.sp,
                 )
                 Text(
-                    text = "${mutableStateListRepo.get(0).clientLogin}:" ,
+                    text = "$login:" ,
                     color = Color.Red,
                     fontSize = 25.sp,
                 )
