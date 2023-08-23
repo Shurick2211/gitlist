@@ -48,11 +48,10 @@ import com.nimko.gitlist.viewmodel.MyViewModel
 @Composable
 fun mainScreen(model: MyViewModel){
     val navController = rememberNavController()
-    var login = ""
     NavHost(navController = navController, startDestination = MainActivity.LIST_USER ){
         composable(MainActivity.LIST_USER){
             ListClient(onClick = {
-                login = it
+                model.login.postValue(it)
                 Log.d("SCREEN", "${MainActivity.LIST_USER} for $it")
                 navController.navigate(MainActivity.LIST_USER_REPO)
             }, model)
@@ -61,9 +60,8 @@ fun mainScreen(model: MyViewModel){
         composable(MainActivity.LIST_USER_REPO){
             ListClientRepos(onClick = {
                 Log.d("SCREEN", MainActivity.LIST_USER_REPO)
-                //navController.popBackStack()//.navigate(MainActivity.LIST_USER)
                 navController.navigateUp()
-            },model, login)
+            },model)
         }
     }
 }
@@ -167,10 +165,15 @@ fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, login:String){
-    val listRepo =
-        model.getClientRepoPager(login, PAGE_SIZE_CLIENT_REPO).collectAsLazyPagingItems()
-
+fun ListClientRepos (onClick: () -> Unit, model: MyViewModel){
+    val mcontext = LocalContext.current as MainActivity
+    var repoFlow = model.getClientRepoPager()
+    var login = ""
+    model.login.observe(mcontext,{
+        login = it
+        repoFlow = model.getClientRepoPager()
+    })
+    var listRepo = repoFlow.collectAsLazyPagingItems()
     Column(modifier = Modifier.fillMaxSize())
     {
         TopAppBar(title = {
@@ -297,9 +300,6 @@ fun ClientRepoListItems(item: ClientRepo) {
 
 }
 
-
-
-const val PAGE_SIZE_CLIENT_REPO = 10
 
 
 

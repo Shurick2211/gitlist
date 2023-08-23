@@ -1,5 +1,6 @@
 package com.nimko.gitlist.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -17,17 +18,17 @@ import com.nimko.gitlist.storage.Storage
 
 class MyViewModel (val database:Db) : ViewModel() {
     private val storage = Storage(database.getClintDao(), ApiService())
-    val clientFlow = getClientPager(PAGE_SIZE_CLIENT)
+    val clientFlow = getClientPager()
+    val login: MutableLiveData<String> = MutableLiveData("")
 
-    private fun getClientPager(perPage:Int) = Pager(
-        config = PagingConfig(perPage, enablePlaceholders = false),
-        pagingSourceFactory = {ClientPagingSource(storage, perPage)}
+    private fun getClientPager() = Pager(
+        config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
+        pagingSourceFactory = {ClientPagingSource(storage, PAGE_SIZE_CLIENT)}
     ).flow.cachedIn(viewModelScope)
 
-
-    fun getClientRepoPager(login:String, perPage: Int) = Pager(
-            config = PagingConfig(perPage, enablePlaceholders = false),
-            pagingSourceFactory = { ClientRepoPagingSource(storage, perPage, login) }
+    fun getClientRepoPager() = Pager(
+            config = PagingConfig(PAGE_SIZE_CLIENT_REPO, enablePlaceholders = false),
+            pagingSourceFactory = { ClientRepoPagingSource(storage, PAGE_SIZE_CLIENT_REPO, login.value!!) }
         ).flow.cachedIn(viewModelScope)
 
 
@@ -41,9 +42,9 @@ class MyViewModel (val database:Db) : ViewModel() {
                 return MyViewModel(database) as T
             }
         }
-        const val PAGE_SIZE_CLIENT = 10
+        const val PAGE_SIZE_CLIENT = 30
 
-
+        const val PAGE_SIZE_CLIENT_REPO = 10
     }
 
 }
