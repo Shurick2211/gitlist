@@ -75,7 +75,7 @@ fun mainScreen(model: MyViewModel){
 fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
 
     val listUser
-    = model.getClientPager(PAGE_SIZE_CLIENT).collectAsLazyPagingItems()
+    = model.clientFlow.collectAsLazyPagingItems()
 
     Column(modifier = Modifier.fillMaxSize())
     {
@@ -298,7 +298,7 @@ fun ClientRepoListItems(item: ClientRepo) {
 }
 
 
-const val PAGE_SIZE_CLIENT = 10
+
 const val PAGE_SIZE_CLIENT_REPO = 10
 
 

@@ -17,8 +17,9 @@ import com.nimko.gitlist.storage.Storage
 
 class MyViewModel (val database:Db) : ViewModel() {
     private val storage = Storage(database.getClintDao(), ApiService())
+    val clientFlow = getClientPager(PAGE_SIZE_CLIENT)
 
-    fun getClientPager(perPage:Int) = Pager(
+    private fun getClientPager(perPage:Int) = Pager(
         config = PagingConfig(perPage, enablePlaceholders = false),
         pagingSourceFactory = {ClientPagingSource(storage, perPage)}
     ).flow.cachedIn(viewModelScope)
@@ -40,6 +41,9 @@ class MyViewModel (val database:Db) : ViewModel() {
                 return MyViewModel(database) as T
             }
         }
+        const val PAGE_SIZE_CLIENT = 10
+
+
     }
 
 }
