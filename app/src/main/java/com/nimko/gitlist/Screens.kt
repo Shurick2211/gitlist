@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -62,7 +63,8 @@ fun mainScreen(model: MyViewModel){
         composable(MainActivity.LIST_USER_REPO){
             ListClientRepos(onClick = {
                 Log.d("SCREEN", MainActivity.LIST_USER_REPO)
-                navController.navigate(MainActivity.LIST_USER)
+                //navController.popBackStack()//.navigate(MainActivity.LIST_USER)
+                navController.navigateUp()
             },model, login)
         }
     }
@@ -170,7 +172,7 @@ fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
 fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, login:String){
     val listRepo =
         model.getClientRepoPager(login, PAGE_SIZE_CLIENT_REPO).collectAsLazyPagingItems()
-
+    val activity = LocalContext.current as MainActivity
     Column(modifier = Modifier.fillMaxSize())
     {
         TopAppBar(title = {
@@ -192,6 +194,7 @@ fun ListClientRepos (onClick: () -> Unit, model: MyViewModel, login:String){
             IconButton(
                 onClick = {
                     onClick()
+
                 }
             ) {
                 Icon(
@@ -297,7 +300,7 @@ fun ClientRepoListItems(item: ClientRepo) {
 }
 
 
-const val PAGE_SIZE_CLIENT = 30
+const val PAGE_SIZE_CLIENT = 10
 const val PAGE_SIZE_CLIENT_REPO = 10
 
 
