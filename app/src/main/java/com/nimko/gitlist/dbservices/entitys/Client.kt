@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "clients")
 data class Client(
     @PrimaryKey val id: Long,
-    val login: String
+    val login: String,
+    val avatarUrl:String
 )

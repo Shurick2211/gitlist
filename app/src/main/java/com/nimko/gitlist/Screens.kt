@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.nimko.gitlist.dbservices.entitys.Client
 import com.nimko.gitlist.dbservices.entitys.ClientRepo
 import com.nimko.gitlist.ui.theme.Pink80
@@ -98,6 +102,7 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
 
 @Composable
 fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,6 +118,17 @@ fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
                     onClick(item.login)
                 }
         ) {
+            AsyncImage(
+                modifier = Modifier
+                    .size(100.dp),
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(item.avatarUrl)
+                    .crossfade(true)
+                    .build(),
+                imageLoader = ImageLoader(context),
+                contentDescription = "${item.login}",
+                contentScale = ContentScale.Crop
+            )
             Text(
                 text = stringResource(id = R.string.id),
                 fontSize= 16.sp,

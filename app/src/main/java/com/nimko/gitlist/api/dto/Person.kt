@@ -22,5 +22,5 @@ data class Person(
     val type: String,
     val site_admin: Boolean
 ){
-    fun toEntity() = Client(id = this.id, login = this.login)
+    fun toEntity() = Client(id = this.id, login = this.login, avatarUrl = this.avatar_url)
 }
