@@ -84,6 +84,9 @@ data class Repo(
     val default_branch: String
 ) {
     fun toEntity(): ClientRepo {
-        return ClientRepo(id = this.id, name = this.name, clientLogin = this.owner.login)
+        return ClientRepo(id = this.id,
+            name = this.name,
+            clientLogin = this.owner.login,
+            url = this.html_url)
     }
 }

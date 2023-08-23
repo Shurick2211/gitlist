@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "c411a75166111269877c2a9ecd235b00",
+    "identityHash": "7905ead999e643aa02f07599dfb0cf48",
     "entities": [
       {
         "tableName": "clients",
@@ -32,7 +32,7 @@
       },
       {
         "tableName": "client_repos",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `client_login` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `client_login` TEXT NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -51,6 +51,12 @@
             "columnName": "client_login",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -66,7 +72,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c411a75166111269877c2a9ecd235b00')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7905ead999e643aa02f07599dfb0cf48')"
     ]
   }
 }

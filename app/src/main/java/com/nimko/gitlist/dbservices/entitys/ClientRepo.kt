@@ -10,5 +10,6 @@ import androidx.room.PrimaryKey
 data class ClientRepo(
     @PrimaryKey val id: Long,
     val name: String,
-    @ColumnInfo(name="client_login") val clientLogin:String
+    @ColumnInfo(name="client_login") val clientLogin:String,
+    val url:String
 )

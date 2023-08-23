@@ -17,7 +17,8 @@ class Storage (
         val list = dao.getAllClient(perPage, page*perPage)
         Log.d("STORAGE","Clients: ${list.size}, per_page:$perPage")
         if ( list.size <= perPage) {
-            val since = if (list.size != 0) list.get(list.lastIndex).id.toInt() else 1
+            val since = if (list.size != 0) list.get(list.lastIndex).id.toInt() else
+                if (page == 0) 0 else 1
             Log.d("Storage", "NEED Client DATA! With id:$since")
             saveDbClientFromApi(perPage, since)
             return dao.getAllClient(perPage, page*perPage).toMutableList()
