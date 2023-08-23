@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface RestApiRequest {
     @GET("users")
-    suspend fun getPersons(@Query("per_page") pp:Int, @Query("page") p:Int): List<Person>
+    suspend fun getPersons(@Query("per_page") pp:Int, @Query("since") since:Int): List<Person>
 
     @GET("users/{login}/repos")
     suspend fun getRepoByPersonLogin(@Path("login") login:String,

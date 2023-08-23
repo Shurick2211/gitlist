@@ -12,8 +12,8 @@ class ApiService {
      .build()
 val restApi = retrofit.create(RestApiRequest::class.java)
 
- suspend fun getClients(pp: Int, p: Int): List<Client> {
-     val persons = restApi.getPersons(pp, p)
+ suspend fun getClients(pp: Int, since: Int): List<Client> {
+     val persons = restApi.getPersons(pp, since)
      return persons.map { it.toEntity() }
  }
 

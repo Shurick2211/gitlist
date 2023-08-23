@@ -15,9 +15,10 @@ class Storage (
 
     suspend fun getClient(perPage:Int, page:Int):MutableList<Client>{
         val list = dao.getAllClient(perPage, page*perPage)
-        if (list.size < perPage) {
-            Log.d("Storage", "NEED Client DATA!")
-            saveDbClientFromApi(perPage, page)
+        if (list.size <= perPage) {
+            val since = list.get(list.lastIndex).id.toInt()
+            Log.d("Storage", "NEED Client DATA! With id:$since")
+            saveDbClientFromApi(perPage, since)
             return dao.getAllClient(perPage, page*perPage).toMutableList()
         }
         return list.toMutableList()
@@ -25,7 +26,7 @@ class Storage (
 
     suspend fun getClientRepo(login: String, perPage:Int, page:Int):MutableList<ClientRepo>{
         val list = dao.getAllClientRepos(login, perPage, page*perPage)
-        if (list.size < perPage) {
+        if (list.size <= perPage) {
             Log.d("Storage", "NEED Repo DATA!")
             saveDbClientRepoFromApi(login, perPage, page)
             return dao.getAllClientRepos(login, perPage, page*perPage).toMutableList()
@@ -33,9 +34,9 @@ class Storage (
         return list.toMutableList()
     }
 
-    private suspend fun saveDbClientFromApi(perPage:Int, page:Int){
+    private suspend fun saveDbClientFromApi(perPage:Int, since:Int){
         try {
-            api.getClients(perPage,page+1).forEach {
+            api.getClients(perPage,since).forEach {
                 try{
                     dao.saveClient(it)
                     Log.d("Db", "Client $it - save!")
