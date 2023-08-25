@@ -20,7 +20,7 @@ class MyViewModel (val database:Db) : ViewModel() {
     private val storage = Storage(database.getClintDao(), ApiService())
     val clientFlow = getClientPager()
     val login: MutableLiveData<String> = MutableLiveData("")
-
+    val url: MutableLiveData<String> = MutableLiveData("")
     private fun getClientPager() = Pager(
         config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
         pagingSourceFactory = {ClientPagingSource(storage, PAGE_SIZE_CLIENT)}

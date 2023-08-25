@@ -8,8 +8,10 @@ import com.nimko.gitlist.dbservices.entitys.ClientRepo
 
 @Dao
 interface ClientDao {
-    @Query("SELECT * FROM clients LIMIT :perPage OFFSET :offset")
-    suspend fun getAllClient(perPage:Int, offset:Int):List<Client>
+    @Query("SELECT * FROM clients " +
+            "WHERE :search ='' OR login LIKE '%' || :search || '%'" +
+            "LIMIT :perPage OFFSET :offset")
+    suspend fun getAllClient(perPage:Int, offset:Int, search:String = ""):List<Client>
 
     @Query("SELECT * FROM client_repos WHERE client_login = :login " +
             "LIMIT :perPage OFFSET :offset")

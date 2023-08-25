@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 )
                 {
-                    mainScreen(model = model)
+                    MainScreen(model = model)
                 }
             }
         }
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
     companion object{
         const val LIST_USER = "listUser"
         const val LIST_USER_REPO = "listUserRepo"
-
+        const val WEB_SCREEN = "webScreen"
     }
 }
 
