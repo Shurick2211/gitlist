@@ -8,7 +8,8 @@ import com.nimko.gitlist.dbservices.entitys.Client
 
 class ClientPagingSource(
     val storage: Storage,
-    val perPage:Int
+    val perPage:Int,
+    val startPage:Int
 ):PagingSource<Int,Client>() {
     override fun getRefreshKey(state: PagingState<Int, Client>): Int? {
         val anchorPosition = state.anchorPosition ?: return null
