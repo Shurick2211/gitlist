@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -133,34 +134,42 @@ fun ClientListItems(onClick: (param:String) -> Unit, item: Client) {
                 contentDescription = item.login,
                 contentScale = ContentScale.Crop
             )
-            Text(
-                text = stringResource(id = R.string.id),
-                fontSize= 16.sp,
-                color = Color.Yellow,
-                modifier = Modifier
-                    .padding(5.dp)
-            )
-            Text(
-                text = "${item.id}",
-                fontSize= 30.sp,
-                color = Color.Yellow,
-                modifier = Modifier
-                    .padding(5.dp)
-            )
-            Text(
-                text = stringResource(id = R.string.login),
-                fontSize= 16.sp,
-                color = Color.Yellow,
-                modifier = Modifier
-                    .padding(5.dp)
-            )
-            Text(
-                text = item.login,
-                fontSize= 30.sp,
-                color = Color.Yellow,
-                modifier = Modifier
-                    .padding(5.dp)
-            )
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(id = R.string.id),
+                        fontSize= 16.sp,
+                        color = Color.Yellow,
+                        modifier = Modifier
+                            .padding(5.dp)
+                    )
+                    Text(
+                        text = "${item.id}",
+                        fontSize= 30.sp,
+                        color = Color.Yellow,
+                        modifier = Modifier
+                            .padding(5.dp)
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(id = R.string.login),
+                        fontSize= 16.sp,
+                        color = Color.Yellow,
+                        modifier = Modifier
+                            .padding(5.dp)
+                    )
+                    Text(
+                        text = item.login,
+                        fontSize= 30.sp,
+                        color = Color.Yellow,
+                        modifier = Modifier
+                            .padding(5.dp)
+                    )
+                }
+            }
+
+
 
         }
 
@@ -287,6 +296,7 @@ fun ClientRepoListItems(onClick: (event:Int) -> Unit, item: ClientRepo, model:My
 
 }
 
+@SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebScreen(onClick: () -> Unit, model: MyViewModel){
@@ -357,6 +367,7 @@ fun WebScreen(onClick: () -> Unit, model: MyViewModel){
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                     loadUrl(url)
+                    webViewClient = WebViewClient()
                     settings.javaScriptEnabled = true
                 }
             }, update = {
