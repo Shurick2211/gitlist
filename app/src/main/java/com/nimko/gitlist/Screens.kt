@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -197,7 +199,7 @@ fun ListClientRepos (onClick: (event:Int) -> Unit, model: MyViewModel){
                 }
             ) {
                 Icon(
-                    Icons.Filled.KeyboardArrowLeft,
+                    Icons.Filled.ArrowBack,
                     contentDescription = "Back",
                     modifier = Modifier.size(80.dp),
                     tint = Color.Black
@@ -290,6 +292,7 @@ fun ClientRepoListItems(onClick: (event:Int) -> Unit, item: ClientRepo, model:My
 @Composable
 fun WebScreen(onClick: () -> Unit, model: MyViewModel){
     val url:String = model.url.value!!
+    var webView:WebView? = null
     Column(modifier = Modifier.fillMaxSize())
     {
         TopAppBar(title = {
@@ -309,8 +312,35 @@ fun WebScreen(onClick: () -> Unit, model: MyViewModel){
                     }
                 ) {
                     Icon(
+                        Icons.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        modifier = Modifier.size(80.dp),
+                        tint = Color.Black
+                    )
+                }
+            },
+            actions = {
+                IconButton(
+                    onClick = {
+                        //onClick()
+                        webView!!.goBack()
+                    }
+                ) {
+                    Icon(
                         Icons.Filled.KeyboardArrowLeft,
                         contentDescription = "Back",
+                        modifier = Modifier.size(80.dp),
+                        tint = Color.Black
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        webView!!.goForward()
+                    }
+                ) {
+                    Icon(
+                        Icons.Filled.KeyboardArrowRight,
+                        contentDescription = "Forward",
                         modifier = Modifier.size(80.dp),
                         tint = Color.Black
                     )
@@ -332,6 +362,7 @@ fun WebScreen(onClick: () -> Unit, model: MyViewModel){
                 }
             }, update = {
                 it.loadUrl(url)
+                webView = it
             })
     }
 }
