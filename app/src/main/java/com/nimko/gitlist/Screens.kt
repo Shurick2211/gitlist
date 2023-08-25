@@ -287,12 +287,11 @@ fun ClientRepoListItems(onClick: (event:Int) -> Unit, item: ClientRepo, model:My
 
 }
 
-@SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebScreen(onClick: () -> Unit, model: MyViewModel){
     val url:String = model.url.value!!
-    val uu = url.substring(url.lastIndexOf("/") - 1)
+    val uu = url.substring(url.lastIndexOf("/"))
     var webView:WebView? = null
     Column(modifier = Modifier.fillMaxSize())
     {
@@ -323,7 +322,6 @@ fun WebScreen(onClick: () -> Unit, model: MyViewModel){
             actions = {
                 IconButton(
                     onClick = {
-                        //onClick()
                         webView!!.goBack()
                     }
                 ) {
