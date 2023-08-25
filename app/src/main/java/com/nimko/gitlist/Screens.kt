@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -201,7 +200,7 @@ fun ListClientRepos (onClick: (event:Int) -> Unit, model: MyViewModel){
                 Icon(
                     Icons.Filled.ArrowBack,
                     contentDescription = "Back",
-                    modifier = Modifier.size(80.dp),
+                    modifier = Modifier.size(60.dp),
                     tint = Color.Black
                 )
             }
@@ -288,19 +287,21 @@ fun ClientRepoListItems(onClick: (event:Int) -> Unit, item: ClientRepo, model:My
 
 }
 
+@SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebScreen(onClick: () -> Unit, model: MyViewModel){
     val url:String = model.url.value!!
+    val uu = url.substring(url.lastIndexOf("/") - 1)
     var webView:WebView? = null
     Column(modifier = Modifier.fillMaxSize())
     {
         TopAppBar(title = {
             Row {
                 Text(
-                    text = "$url:" ,
+                    text = "$uu:" ,
                     color = Color.Red,
-                    fontSize = 25.sp,
+                    fontSize = 16.sp,
                 )
             }
 
@@ -314,7 +315,7 @@ fun WebScreen(onClick: () -> Unit, model: MyViewModel){
                     Icon(
                         Icons.Filled.ArrowBack,
                         contentDescription = "Back",
-                        modifier = Modifier.size(80.dp),
+                        modifier = Modifier.size(60.dp),
                         tint = Color.Black
                     )
                 }
@@ -357,8 +358,8 @@ fun WebScreen(onClick: () -> Unit, model: MyViewModel){
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
-                    webViewClient = WebViewClient()
                     loadUrl(url)
+                    settings.javaScriptEnabled = true
                 }
             }, update = {
                 it.loadUrl(url)
