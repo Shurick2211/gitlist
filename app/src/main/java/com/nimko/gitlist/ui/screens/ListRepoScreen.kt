@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.nimko.gitlist.R
 import com.nimko.gitlist.dbservices.entitys.ClientRepo
-import com.nimko.gitlist.ui.theme.GitlistTheme
 import com.nimko.gitlist.ui.theme.Pink80
 import com.nimko.gitlist.viewmodel.MyViewModel
 
