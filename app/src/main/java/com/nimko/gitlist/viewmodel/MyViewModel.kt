@@ -14,9 +14,9 @@ import androidx.paging.cachedIn
 import com.nimko.gitlist.api.ApiService
 import com.nimko.gitlist.App
 import com.nimko.gitlist.dbservices.Db
-import com.nimko.gitlist.storage.paging.ClientPagingSource
-import com.nimko.gitlist.storage.paging.ClientRepoPagingSource
 import com.nimko.gitlist.storage.Storage
+import com.nimko.gitlist.storage.paging.PagingSource
+
 @SuppressLint("StaticFieldLeak")
 class MyViewModel (context: Context) : ViewModel() {
     private val storage =
@@ -27,13 +27,16 @@ class MyViewModel (context: Context) : ViewModel() {
 
     private fun getClientPager() = Pager(
         config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
-        pagingSourceFactory = { ClientPagingSource(storage, PAGE_SIZE_CLIENT) }
+        pagingSourceFactory = {
+            PagingSource(storage::getClient, PAGE_SIZE_CLIENT)
+        }
     ).flow.cachedIn(viewModelScope)
 
     fun getClientRepoPager() = Pager(
             config = PagingConfig(PAGE_SIZE_CLIENT_REPO, enablePlaceholders = false),
             pagingSourceFactory = {
-                ClientRepoPagingSource(storage, PAGE_SIZE_CLIENT_REPO) }
+                PagingSource(storage::getClientRepo, PAGE_SIZE_CLIENT_REPO)
+            }
         ).flow.cachedIn(viewModelScope)
 
 
