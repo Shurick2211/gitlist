@@ -1,10 +1,11 @@
-package com.nimko.gitlist.dbservices.dao
+package com.nimko.gitlist.dbservices
 
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.nimko.gitlist.dbservices.dao.ClientDao
 import com.nimko.gitlist.dbservices.entitys.Client
 import com.nimko.gitlist.dbservices.entitys.ClientRepo
 
@@ -20,7 +21,7 @@ abstract class Db: RoomDatabase() {
     abstract fun getClintDao(): ClientDao
 
     companion object{
-        fun createDataBase(context: Context): Db{
+        fun createDataBase(context: Context): Db {
             return Room.databaseBuilder(
                 context,
                 Db::class.java,

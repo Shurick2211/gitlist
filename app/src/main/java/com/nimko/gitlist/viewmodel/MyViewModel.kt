@@ -1,5 +1,6 @@
 package com.nimko.gitlist.viewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,27 +12,28 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.nimko.gitlist.api.ApiService
-import com.nimko.gitlist.dbservices.App
-import com.nimko.gitlist.dbservices.dao.Db
-import com.nimko.gitlist.storage.ClientPagingSource
-import com.nimko.gitlist.storage.ClientRepoPagingSource
+import com.nimko.gitlist.App
+import com.nimko.gitlist.dbservices.Db
+import com.nimko.gitlist.storage.paging.ClientPagingSource
+import com.nimko.gitlist.storage.paging.ClientRepoPagingSource
 import com.nimko.gitlist.storage.Storage
-
-class MyViewModel (val context: Context) : ViewModel() {
-    private val storage = Storage(Db.createDataBase(context).getClintDao(), ApiService())
+@SuppressLint("StaticFieldLeak")
+class MyViewModel (context: Context) : ViewModel() {
+    private val storage =
+        Storage(Db.createDataBase(context).getClintDao(), ApiService(), this)
     val clientFlow = getClientPager()
     val login: MutableLiveData<String> = MutableLiveData("")
     val url: MutableLiveData<String> = MutableLiveData("")
-    val startPage = 15
+
     private fun getClientPager() = Pager(
         config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
-        pagingSourceFactory = {ClientPagingSource(storage, PAGE_SIZE_CLIENT, startPage)}
+        pagingSourceFactory = { ClientPagingSource(storage, PAGE_SIZE_CLIENT) }
     ).flow.cachedIn(viewModelScope)
 
     fun getClientRepoPager() = Pager(
             config = PagingConfig(PAGE_SIZE_CLIENT_REPO, enablePlaceholders = false),
             pagingSourceFactory = {
-                ClientRepoPagingSource(storage, PAGE_SIZE_CLIENT_REPO, login.value!!) }
+                ClientRepoPagingSource(storage, PAGE_SIZE_CLIENT_REPO) }
         ).flow.cachedIn(viewModelScope)
 
 

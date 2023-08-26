@@ -1,15 +1,14 @@
-package com.nimko.gitlist.storage
+package com.nimko.gitlist.storage.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.nimko.gitlist.dbservices.entitys.Client
-
+import com.nimko.gitlist.storage.Storage
 
 
 class ClientPagingSource(
     val storage: Storage,
-    val perPage:Int,
-    val startPage:Int
+    val perPage:Int
 ):PagingSource<Int,Client>() {
     override fun getRefreshKey(state: PagingState<Int, Client>): Int? {
         val anchorPosition = state.anchorPosition ?: return null

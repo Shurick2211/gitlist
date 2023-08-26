@@ -6,13 +6,14 @@ import com.nimko.gitlist.api.ApiService
 import com.nimko.gitlist.dbservices.dao.ClientDao
 import com.nimko.gitlist.dbservices.entitys.Client
 import com.nimko.gitlist.dbservices.entitys.ClientRepo
+import com.nimko.gitlist.viewmodel.MyViewModel
 import retrofit2.HttpException
 
 class Storage (
     val dao:ClientDao,
-    val api:ApiService
+    val api:ApiService,
+    val viewModel: MyViewModel
 ){
-
     suspend fun getClient(perPage:Int, page:Int):MutableList<Client>{
         val list = dao.getAllClient(perPage, page*perPage-1)
         Log.d("STORAGE","Clients: ${list.size}, per_page:$perPage")
@@ -25,7 +26,8 @@ class Storage (
         return list.toMutableList()
     }
 
-    suspend fun getClientRepo(login: String, perPage:Int, page:Int):MutableList<ClientRepo>{
+    suspend fun getClientRepo(perPage:Int, page:Int):MutableList<ClientRepo>{
+        val login = viewModel.login.value!!
         val list = dao.getAllClientRepos(login, perPage, page*perPage-1)
         if (list.size < perPage) {
             Log.d("Storage", "NEED Repo DATA!")

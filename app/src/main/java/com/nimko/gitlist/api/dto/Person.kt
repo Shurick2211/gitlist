@@ -1,26 +1,27 @@
 package com.nimko.gitlist.api.dto
 
+import com.google.gson.annotations.SerializedName
 import com.nimko.gitlist.dbservices.entitys.Client
 
 data class Person(
     val login: String,
     val id: Long,
-    val node_id: String,
-    val avatar_url: String,
-    val gravatar_id: String,
+    @SerializedName("node_id") val nodeId: String,
+    @SerializedName("avatar_url") val avatarUrl: String,
+    @SerializedName("gravatar_id") val gravatarId: String,
     val url: String,
-    val html_url: String,
-    val followers_url: String,
-    val following_url: String,
-    val gists_url: String,
-    val starred_url: String,
-    val subscriptions_url: String,
-    val organizations_url: String,
-    val repos_url: String,
-    val events_url: String,
-    val received_events_url: String,
+    @SerializedName("html_url") val htmlUrl: String,
+    @SerializedName("followers_url") val followersUrl: String,
+    @SerializedName("following_url") val followingUrl: String,
+    @SerializedName("gists_url") val gistsUrl: String,
+    @SerializedName("starred_url") val starredUrl: String,
+    @SerializedName("subscriptions_url") val subscriptionsUrl: String,
+    @SerializedName("organizations_url") val organizationsUrl: String,
+    @SerializedName("repos_url") val reposUrl: String,
+    @SerializedName("events_url") val eventsUrl: String,
+    @SerializedName("received_events_url") val receivedEventsUrl: String,
     val type: String,
-    val site_admin: Boolean
+    @SerializedName("site_admin") val siteAdmin: Boolean
 ){
-    fun toEntity() = Client(id = this.id, login = this.login, avatarUrl = this.avatar_url)
+    fun toEntity() = Client(id = this.id, login = this.login, avatarUrl = this.avatarUrl)
 }
