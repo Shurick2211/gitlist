@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.nimko.gitlist.R
 import com.nimko.gitlist.dbservices.entitys.ClientRepo
+import com.nimko.gitlist.ui.theme.GitlistTheme
 import com.nimko.gitlist.ui.theme.Pink80
 import com.nimko.gitlist.viewmodel.MyViewModel
 
@@ -98,33 +99,12 @@ fun ClientRepoListItems(onClick: (event:Int) -> Unit, item: ClientRepo, model:My
         ,
         shape = RoundedCornerShape(15.dp)
     ) {
-            Column {
+            Column(Modifier
+                        .background(color = Pink80),) {
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .background(color = Pink80),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.id),
-                        fontSize= 16.sp,
-                        color = Color.Black,
-                        modifier = Modifier
-                            .padding(start = 30.dp)
-                    )
-                    Text(
-                        text = "${item.id}",
-                        fontSize= 30.sp,
-                        color = Color.Black,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 3.dp)
-                    )
-                }
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(color = Pink80),
+                        .padding(start = 3.dp),
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
@@ -141,8 +121,31 @@ fun ClientRepoListItems(onClick: (event:Int) -> Unit, item: ClientRepo, model:My
                         color = Color.Black,
                         modifier = Modifier
                             .padding(start = 3.dp),
-                        )
+                    )
                 }
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 3.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.id),
+                        fontSize= 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(start = 3.dp)
+                    )
+                    Text(
+                        text = item.language ?: "—",
+                        fontSize= 24.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 3.dp)
+                    )
+                }
+
             }
 
         }

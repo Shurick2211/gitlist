@@ -2,7 +2,7 @@
     <string name="app_name">Gitlist</string>
     <string name="clientscreen">Git clients:</string>
     <string name="reposcreen">Repos by</string>
-    <string name="id">id:</string>
+    <string name="id">lang:</string>
     <string name="name">name:</string>
     <string name="login">login:</string>
 </resources>
