@@ -13,11 +13,8 @@ interface ClientDao {
             "LIMIT :perPage OFFSET :offset")
     suspend fun getAllClient(perPage:Int, offset:Int, search:String = ""):List<Client>
 
-    @Query("SELECT * FROM client_repos WHERE client_login = :login " +
-            "OR :search ='' OR name LIKE '%' || :search || '%'" +
-            "LIMIT :perPage OFFSET :offset")
-    suspend fun getAllClientRepos(login:String, perPage:Int, offset:Int,
-                                  search:String = ""):List<ClientRepo>
+    @Query("SELECT * FROM client_repos WHERE client_login = :login LIMIT :perPage OFFSET :offset")
+    suspend fun getAllClientRepos(login:String, perPage:Int, offset:Int):List<ClientRepo>
 
     @Insert(entity = Client::class)
     suspend fun saveClient(client: Client)

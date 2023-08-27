@@ -37,6 +37,37 @@ class Storage (
         return list.toMutableList()
     }
 
+    suspend fun getSearchClient(perPage:Int, page:Int):List<Client>{
+        val searchBy = viewModel.searchUserBy.value!!
+        val listFromDb = dao.getAllClient(perPage = perPage, page*perPage-1, search = searchBy)
+        val listFromApi =
+            try {
+                api.searchClient(searchBy,perPage, page)
+            } catch (he: HttpException){
+                Log.d("ApiError", he.toString())
+                emptyList()
+            }
+        val list = if(listFromDb.isEmpty()) listFromApi else listFromApi.plus(listFromDb)
+            .sortedBy {it.login}
+        Log.d("STORAGE","Clients DB: ${listFromDb.size}, API:${listFromApi.size}")
+        if (list.size < perPage) {
+            Log.d("Storage", "Save searched Client!")
+            saveListClientsOnDb(list)
+        }
+        return list
+    }
+
+    private suspend fun saveListClientsOnDb(list: List<Client>){
+        list.forEach {
+            try{
+                dao.saveClient(it)
+                Log.d("Db", "Client $it - save!")
+            } catch (e: SQLiteConstraintException) {
+                Log.d("DbError", "Client $it - existed!")
+            }
+        }
+    }
+
     private suspend fun saveDbClientFromApi(perPage:Int, since:Int){
         try {
             api.getClients(perPage,since).forEach {

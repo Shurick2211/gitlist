@@ -24,11 +24,14 @@ class MyViewModel (context: Context) : ViewModel() {
     val clientFlow = getClientPager()
     val login: MutableLiveData<String> = MutableLiveData("")
     val url: MutableLiveData<String> = MutableLiveData("")
+    val searchUserBy: MutableLiveData<String> = MutableLiveData("")
 
     private fun getClientPager() = Pager(
         config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
         pagingSourceFactory = {
-            PagingSource(storage::getClient, PAGE_SIZE_CLIENT)
+            if(searchUserBy.value.isNullOrBlank() || searchUserBy.value!!.isEmpty())
+                PagingSource(storage::getClient, PAGE_SIZE_CLIENT)
+            else PagingSource(storage::getSearchClient, PAGE_SIZE_CLIENT)
         }
     ).flow.cachedIn(viewModelScope)
 
