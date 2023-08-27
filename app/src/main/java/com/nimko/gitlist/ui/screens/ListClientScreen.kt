@@ -49,15 +49,17 @@ import com.nimko.gitlist.viewmodel.MyViewModel
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
-    val listUser
-            = model.clientFlow.collectAsLazyPagingItems()
+    val listUserDefault = model.clientFlow.collectAsLazyPagingItems()
+    val searchList = model.getClientSearchPager().collectAsLazyPagingItems()
+    val listUser = remember {
+        mutableStateOf(listUserDefault)
+    }
     val searchBy = remember {
         mutableStateOf("")
     }
     val searchPanelSize = remember {
         mutableStateOf(0f)
     }
-
 
     Column(modifier = Modifier.fillMaxSize())
     {
@@ -79,23 +81,30 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
                         .padding(3.dp),
                     query = searchBy.value,
                     onQueryChange = {
-                                    searchBy.value = it
+                        searchBy.value = it
+                        Log.d("ON_CHANGE",it)
+                        if(it.isBlank() && listUser.value == searchList)
+                            listUser.value = listUserDefault
                     },
                     onSearch = {
                         model.searchUserBy.value = it
-                        Log.d("SEARCH",it)
+                        Log.d("SEARCH",model.searchUserBy.value.toString())
+                        listUser.value = searchList
                                },
                     active = false,
                     onActiveChange = {},
                     placeholder = { Text(text = stringResource(id = R.string.search))}
                 ) {
-                    
+
                 }
                 IconButton(
                     onClick = {
-                        searchPanelSize.value =
-                            if(searchPanelSize.value < 0.1f) 0.6f
-                            else 0F
+                            if(searchPanelSize.value < 0.1f) {
+                                searchPanelSize.value = 0.6f
+                            }
+                            else {
+                                searchPanelSize.value = 0F
+                            }
                     }
                 ) {
                     Icon(
@@ -110,8 +119,8 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(listUser.itemCount) {  item ->
-                ClientListItems(onClick, listUser[item]!!)
+            items(listUser.value.itemCount) {  item ->
+                ClientListItems(onClick, listUser.value[item]!!)
             }
         }
     }

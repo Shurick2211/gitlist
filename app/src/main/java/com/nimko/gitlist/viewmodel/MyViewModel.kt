@@ -21,7 +21,7 @@ import com.nimko.gitlist.storage.paging.PagingSource
 class MyViewModel (context: Context) : ViewModel() {
     private val storage =
         Storage(Db.createDataBase(context).getClintDao(), ApiService(), this)
-    var clientFlow = getClientPager()
+    val clientFlow = getClientPager()
     val login: MutableLiveData<String> = MutableLiveData("")
     val url: MutableLiveData<String> = MutableLiveData("")
     val searchUserBy: MutableLiveData<String> = MutableLiveData("")
@@ -36,7 +36,7 @@ class MyViewModel (context: Context) : ViewModel() {
     fun getClientSearchPager() = Pager(
         config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
         pagingSourceFactory = {
-            PagingSource(storage::getSearchClient, PAGE_SIZE_CLIENT)
+            PagingSource(storage::getSearchClientOnDb, PAGE_SIZE_CLIENT)
         }
     ).flow.cachedIn(viewModelScope)
 
