@@ -9,16 +9,25 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +51,14 @@ import com.nimko.gitlist.viewmodel.MyViewModel
 fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
     val listUser
             = model.clientFlow.collectAsLazyPagingItems()
+    val searchBy = remember {
+        mutableStateOf("")
+    }
+    val searchPanelSize = remember {
+        mutableStateOf(0f)
+    }
+
+
     Column(modifier = Modifier.fillMaxSize())
     {
         TopAppBar(title =
@@ -54,7 +71,41 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
         },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color.Green.copy(alpha = 0.3f)
-            )
+            ),
+            actions = {
+                SearchBar(
+                    modifier = Modifier
+                        .fillMaxWidth(searchPanelSize.value)
+                        .padding(3.dp),
+                    query = searchBy.value,
+                    onQueryChange = {
+                                    searchBy.value = it
+                    },
+                    onSearch = {
+                        model.searchUserBy.value = it
+                        Log.d("SEARCH",it)
+                               },
+                    active = false,
+                    onActiveChange = {},
+                    placeholder = { Text(text = stringResource(id = R.string.search))}
+                ) {
+                    
+                }
+                IconButton(
+                    onClick = {
+                        searchPanelSize.value =
+                            if(searchPanelSize.value < 0.1f) 0.6f
+                            else 0F
+                    }
+                ) {
+                    Icon(
+                        Icons.Filled.Search,
+                        contentDescription = stringResource(id = R.string.search),
+                        modifier = Modifier.size(60.dp),
+                        tint = Color.Black
+                    )
+                }
+            }
         )
         LazyColumn(
             modifier = Modifier.fillMaxSize()
