@@ -10,15 +10,15 @@ import com.nimko.gitlist.viewmodel.MyViewModel
 import retrofit2.HttpException
 
 class Storage (
-    val dao:ClientDao,
-    val api:ApiService,
-    val viewModel: MyViewModel
+    private val dao:ClientDao,
+    private val api:ApiService,
+    private val viewModel: MyViewModel
 ){
     suspend fun getClient(perPage:Int, page:Int):MutableList<Client>{
         val list = dao.getAllClient(perPage, page*perPage-1)
         Log.d("STORAGE","Clients: ${list.size}, per_page:$perPage")
         if (list.size < perPage) {
-            val since = if (!list.isEmpty()) list.get(list.lastIndex).id.toInt() else 0
+            val since = if (list.isNotEmpty()) list[list.lastIndex].id.toInt() else 0
             Log.d("Storage", "NEED Client DATA! With id:$since")
             saveDbClientFromApi(perPage, since)
             return dao.getAllClient(perPage, page*perPage).toMutableList()
@@ -43,7 +43,7 @@ class Storage (
         return list
     }
 
-    suspend fun getSearchClientOnApi(perPage:Int, page:Int):List<Client> {
+    private suspend fun getSearchClientOnApi(perPage:Int, page:Int):List<Client> {
         val searchBy = viewModel.searchUserBy.value!!
         val listFromApi =
             try {
@@ -57,7 +57,7 @@ class Storage (
         return listFromApi
     }
 
-    suspend fun getSearchClientOnDb(perPage:Int, page:Int):List<Client>{
+    private suspend fun getSearchClientOnDb(perPage:Int, page:Int):List<Client>{
         val searchBy = viewModel.searchUserBy.value!!
         val listFromDb = dao.getAllClient(perPage = perPage, page*perPage-1, search = searchBy)
         Log.d("STORAGE Search","Clients DB: ${listFromDb.size} for $searchBy")
