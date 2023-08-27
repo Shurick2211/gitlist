@@ -37,7 +37,7 @@ class Storage (
         return list.toMutableList()
     }
     suspend fun getSearchClientOnApi(perPage:Int, page:Int):List<Client> {
-        val searchBy = viewModel.searchUserBy.value!!
+        var searchBy = viewModel.searchUserBy.value!!
         val listFromApi =
             try {
                 api.searchClient(searchBy, perPage, page)
@@ -45,7 +45,7 @@ class Storage (
                 Log.d("ApiError", he.toString())
                 emptyList()
             }
-        Log.d("STORAGE","Clients API:${listFromApi.size} for $searchBy")
+        Log.d("STORAGE Search","Clients API:${listFromApi.size} for $searchBy")
         saveListClientsOnDb(listFromApi)
         return listFromApi
     }
@@ -53,7 +53,7 @@ class Storage (
     suspend fun getSearchClientOnDb(perPage:Int, page:Int):List<Client>{
         val searchBy = viewModel.searchUserBy.value!!
         val listFromDb = dao.getAllClient(perPage = perPage, page*perPage-1, search = searchBy)
-        Log.d("STORAGE","Clients DB: ${listFromDb.size} for $searchBy")
+        Log.d("STORAGE Search","Clients DB: ${listFromDb.size} for $searchBy")
         return listFromDb
     }
 

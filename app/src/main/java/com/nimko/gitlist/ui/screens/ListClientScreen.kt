@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,10 +47,9 @@ import com.nimko.gitlist.viewmodel.MyViewModel
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
-    val listUserDefault = model.clientFlow.collectAsLazyPagingItems()
-    val searchList = model.getClientSearchPager().collectAsLazyPagingItems()
-    val listUser = remember {
-        mutableStateOf(listUserDefault)
+    val defaultUsers = model.clientFlow
+    val listFlow = remember {
+        mutableStateOf(defaultUsers)
     }
     val searchBy = remember {
         mutableStateOf("")
@@ -82,21 +79,20 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
                     query = searchBy.value,
                     onQueryChange = {
                         searchBy.value = it
+                        model.searchUserBy.value = it
                         Log.d("ON_CHANGE",it)
-                        if(it.isBlank() && listUser.value == searchList)
-                            listUser.value = listUserDefault
+                        listFlow.value = if(it.isEmpty()) defaultUsers
+                        else model.getClientSearchPagerDb()
                     },
                     onSearch = {
                         model.searchUserBy.value = it
                         Log.d("SEARCH",model.searchUserBy.value.toString())
-                        listUser.value = searchList
+                        listFlow.value = model.getClientSearchPagerApi()
                                },
                     active = false,
                     onActiveChange = {},
                     placeholder = { Text(text = stringResource(id = R.string.search))}
-                ) {
-
-                }
+                ) {}
                 IconButton(
                     onClick = {
                             if(searchPanelSize.value < 0.1f) {
@@ -116,11 +112,12 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
                 }
             }
         )
+        val users = listFlow.value.collectAsLazyPagingItems()
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(listUser.value.itemCount) {  item ->
-                ClientListItems(onClick, listUser.value[item]!!)
+            items(users.itemCount) {  item ->
+                ClientListItems(onClick, users[item]!!)
             }
         }
     }

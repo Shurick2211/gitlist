@@ -33,10 +33,17 @@ class MyViewModel (context: Context) : ViewModel() {
         }
     ).flow.cachedIn(viewModelScope)
 
-    fun getClientSearchPager() = Pager(
+    fun getClientSearchPagerDb() = Pager(
         config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
         pagingSourceFactory = {
             PagingSource(storage::getSearchClientOnDb, PAGE_SIZE_CLIENT)
+        }
+    ).flow.cachedIn(viewModelScope)
+
+    fun getClientSearchPagerApi() = Pager(
+        config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
+        pagingSourceFactory = {
+            PagingSource(storage::getSearchClientOnApi, PAGE_SIZE_CLIENT)
         }
     ).flow.cachedIn(viewModelScope)
 
