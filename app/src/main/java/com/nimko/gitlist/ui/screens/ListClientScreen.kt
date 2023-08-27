@@ -60,6 +60,7 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
 
     Column(modifier = Modifier.fillMaxSize())
     {
+        val users = listFlow.value.collectAsLazyPagingItems()
         TopAppBar(title =
         {
             Text(
@@ -80,15 +81,17 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
                     onQueryChange = {
                         searchBy.value = it
                         model.searchUserBy.value = it
-                        Log.d("ON_CHANGE",it)
-                        listFlow.value = if(it.isEmpty()) defaultUsers
-                        else model.getClientSearchPagerDb()
+                        if(it.isEmpty()) {
+                            Log.d("ON_CHANGE","EMPTY")
+                            listFlow.value = defaultUsers
+                        }
+                        else listFlow.value = model.getClientSearchPager()
                     },
                     onSearch = {
                         model.searchUserBy.value = it
                         Log.d("SEARCH",model.searchUserBy.value.toString())
-                        listFlow.value = model.getClientSearchPagerApi()
-                               },
+                        listFlow.value = model.getClientSearchPager()
+                    },
                     active = false,
                     onActiveChange = {},
                     placeholder = { Text(text = stringResource(id = R.string.search))}
@@ -112,7 +115,7 @@ fun ListClient (onClick: (param:String) -> Unit, model: MyViewModel){
                 }
             }
         )
-        val users = listFlow.value.collectAsLazyPagingItems()
+
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {

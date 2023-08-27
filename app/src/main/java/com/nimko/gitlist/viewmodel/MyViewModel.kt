@@ -11,9 +11,11 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import androidx.paging.compose.LazyPagingItems
 import com.nimko.gitlist.api.ApiService
 import com.nimko.gitlist.App
 import com.nimko.gitlist.dbservices.Db
+import com.nimko.gitlist.dbservices.entitys.Client
 import com.nimko.gitlist.storage.Storage
 import com.nimko.gitlist.storage.paging.PagingSource
 
@@ -25,6 +27,7 @@ class MyViewModel (context: Context) : ViewModel() {
     val login: MutableLiveData<String> = MutableLiveData("")
     val url: MutableLiveData<String> = MutableLiveData("")
     val searchUserBy: MutableLiveData<String> = MutableLiveData("")
+    //val saveListUsers:MutableLiveData<LazyPagingItems<Client>> = MutableLiveData()
 
     fun getClientPager() = Pager(
         config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
@@ -33,17 +36,10 @@ class MyViewModel (context: Context) : ViewModel() {
         }
     ).flow.cachedIn(viewModelScope)
 
-    fun getClientSearchPagerDb() = Pager(
+    fun getClientSearchPager() = Pager(
         config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
         pagingSourceFactory = {
-            PagingSource(storage::getSearchClientOnDb, PAGE_SIZE_CLIENT)
-        }
-    ).flow.cachedIn(viewModelScope)
-
-    fun getClientSearchPagerApi() = Pager(
-        config = PagingConfig(PAGE_SIZE_CLIENT, enablePlaceholders = false),
-        pagingSourceFactory = {
-            PagingSource(storage::getSearchClientOnApi, PAGE_SIZE_CLIENT)
+            PagingSource(storage::getSearchClient, PAGE_SIZE_CLIENT)
         }
     ).flow.cachedIn(viewModelScope)
 

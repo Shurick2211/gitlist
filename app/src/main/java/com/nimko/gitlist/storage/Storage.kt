@@ -36,8 +36,15 @@ class Storage (
         }
         return list.toMutableList()
     }
+
+    suspend fun getSearchClient(perPage: Int, page: Int):List<Client>{
+        var list = getSearchClientOnDb(perPage, page)
+        if(list.size < MIN_FOR_GET_SEARCH) list = list + getSearchClientOnApi(perPage, page)
+        return list
+    }
+
     suspend fun getSearchClientOnApi(perPage:Int, page:Int):List<Client> {
-        var searchBy = viewModel.searchUserBy.value!!
+        val searchBy = viewModel.searchUserBy.value!!
         val listFromApi =
             try {
                 api.searchClient(searchBy, perPage, page)
@@ -96,6 +103,9 @@ class Storage (
         }catch (he: HttpException){
             Log.d("ApiError", he.toString())
         }
+    }
+    companion object{
+        const val MIN_FOR_GET_SEARCH = 5
     }
 
 }
